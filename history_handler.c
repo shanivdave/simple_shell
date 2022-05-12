@@ -68,7 +68,7 @@ int display_history(void)
 		counter++;
 		printf("%d %s", counter, line);
 	}
-	if(line != NULL)
+	if (line != NULL)
 		free(line);
 	fclose(fp);
 	free(file_path);
