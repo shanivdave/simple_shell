@@ -1,5 +1,5 @@
-fndef HOLBERTON_H
-#define HOLBERTON_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <stdio.h>
 #include <string.h>
@@ -71,4 +71,4 @@ int shell_help(char **args);
 /*history*/
 int get_history(char *input);
 int display_history(void);
-#endif /*HOLBERTON_H*/
+#endif /*MAIN_H*/
