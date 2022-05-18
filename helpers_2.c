@@ -1,10 +1,4 @@
-/*
- * File: helpers_2.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 void handle_line(char **line, ssize_t read);
 ssize_t get_new_len(char *line);
