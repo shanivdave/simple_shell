@@ -1,42 +1,33 @@
 #include "main.h"
-/**
- *free_args - frees a two dimensional string
- *@args:array of pointers to strings
- *Return:void
- */
-void free_args(char **args)
-{
-	int i = 0;
 
-	for (i = 0; args[i]; i++)
-	{
-		free(args[i]);
-	}
-	free(args);
-}
 /**
- *read_line - reads user's input from stdin
+ * tokenizer - Analyze arguments in tokens.
  *
- *Return:pointer to string containing user input
+ * @BUFF: bring arguments.
+ *
+ * Return: Arg_str.
  */
-char *read_line(void)
+
+char **tokenizer(char *BUFF)
 {
-	char *line = NULL;
-	size_t len = 0;
-	int var = 0;
+	char *token = NULL;
+	char **Arg_str = NULL;
+	int i = 0, size = 0;
 
-	var = getline(&line, &len, stdin);
-	if (var == EOF)
+	while (BUFF[size] != '\0')
+		size++;
+
+	Arg_str = malloc(sizeof(char *) * size);
+
+
+	token = strtok(BUFF, DELIM);
+	Arg_str[i] = token;
+
+	for (i = 1; token != NULL; i++)
 	{
-		free(line);
-		exit(0);
-	}
-	if (line == NULL)
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		free(line);
-		exit(-1);
+		token = strtok(NULL, DELIM);
+		Arg_str[i] = token;
 	}
 
-	return (line);
+	return (Arg_str);
 }
