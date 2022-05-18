@@ -1,91 +1,47 @@
 #include "main.h"
 
 /**
- *get_path - gets the absolute path of a command
- *@args:pointer to an array of strings
- *Return:address of the path
- */
-int get_path(char **args)
+ * prompt - call prompt from another function (prompt)
+ *
+ **/
+void prompt(void)
 {
-	char *path, *token, *cmd_token;
-	struct stat st;
-
-	path = get_env("PATH");
-	token = strtok(path, ":");
-
-	while (token != NULL)
+	for (;;)
 	{
-		cmd_token = cmd_build(*args, token);
-		if (stat(cmd_token, &st) == 0)
-		{
-			*args = _strdup(cmd_token);
-			free(cmd_token);
-			free(path);
-			return (0);
-		}
-		free(cmd_token);
-		token = strtok(NULL, ":");
-	}
-	free(path);
-	return (1);
-}
-/**
- *get_env - retrieves an environment variable
- *@path:variable passed
- *Return:pointer to a string
- */
-char *get_env(char *path)
-{
-	char *envcpy;
-	int i = 0;
-	int len, len2;
+		char *text = NULL, **environ;
+		pid_t child_pid;
+		int status, lenbuf;
+		size_t bufsize = 0;
 
-	while (environ[i])
-	{
-		len = _strlen(path);
-/*locate substring PATH*/
-		if (strstr(environ[i], path))
+		place("$ ");
+		lenbuf = getline(&text, &bufsize, stdin);
+		if (lenbuf == -1)
+			exit(98);
+		if (compareExit(text, "exit") == 0)
+			exit(0);
+		if (compareEnv(text, "env") == 0)
 		{
-			if (environ[i][len] == '=')
+			while (*environ != NULL)
 			{
-				len2 = _strlen(environ[i]) - _strlen(path);
-				envcpy = malloc(sizeof(char) * len2);
-				if (envcpy == NULL)
+				if (!(_strcmpdir(*environ, "USER")) ||
+						!(_strcmpdir(*environ, "LANGUAGE")) ||
+						!(_strcmpdir(*environ, "SESSION")) ||
+						!(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
+						!(_strcmpdir(*environ, "SHLV")) ||
+						!(_strcmpdir(*environ, "HOME")) ||
+						!(_strcmpdir(*environ, "C_IS")) ||
+						!(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
+						!(_strcmpdir(*environ, "LOGNAME")) ||
+						!(_strcmpdir(*environ, "TERM")) ||
+						!(_strcmpdir(*environ, "PATH")))
 				{
-					perror("Error: Insufficient memory");
-					exit(1);
-				}
-				_strcpy(envcpy, environ[i] + (len + 1));
-				return (envcpy);
-			}
-		}
-		i++;
-	}
-	return (NULL);
-}
-/**
- *cmd_build - returns full cmd path
- *@token:cmd passed
- *@dir_value:current path dir
- *Return:pointer to full cmd path
- */
-char *cmd_build(char *token, char *dir_value)
-{
-	size_t path_len;
-	char *path;
-
-	path_len = _strlen(token) + _strlen(dir_value) + 2;
-	path = malloc(sizeof(char) * path_len);
-
-	if (path == NULL)
-	{
-		perror("Error: malloc->buildcmd\n");
-		return (NULL);
-	}
-	memset(path, 0, path_len);
-
-	path = _strcat(path, dir_value);
-	path = _strcat(path, "/");
-	path = _strcat(path, token);
-	return (path);
-}
+					place(*environ), place("\n"); }
+				environ++; }}
+		child_pid = fork();
+		if (child_pid < 0)
+			perror("Error");
+		if (child_pid == 0)
+			identify_string(text);
+		else
+			wait(&status);
+	}}
