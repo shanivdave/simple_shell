@@ -1,42 +1,37 @@
 #include "main.h"
-/**
- *free_args - frees a two dimensional string
- *@args:array of pointers to strings
- *Return:void
- */
-void free_args(char **args)
-{
-	int i = 0;
 
-	for (i = 0; args[i]; i++)
-	{
-		free(args[i]);
-	}
-	free(args);
-}
 /**
- *read_line - reads user's input from stdin
+ * _fork - Create a child process
  *
- *Return:pointer to string containing user input
+ * @Arg_str: argument string
+ * @ct_output: output.
+ *
+ * Return: output.
  */
-char *read_line(void)
+
+int _fork(char **Arg_str, int ct_output)
 {
-	char *line = NULL;
-	size_t len = 0;
-	int var = 0;
+	pid_t pid;
+	int sts;
 
-	var = getline(&line, &len, stdin);
-	if (var == EOF)
+	pid = fork();
+
+	if (pid == 0)
 	{
-		free(line);
-		exit(0);
-	}
-	if (line == NULL)
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		free(line);
-		exit(-1);
+		if (execve(Arg_str[0], Arg_str, NULL) == -1)
+			perror("Error: execve");
 	}
 
-	return (line);
+	else if (pid == -1)
+		perror("Error: Fork failure");
+
+	else
+	{
+		wait(&sts);
+
+		if (WIFEXITED(sts))
+			ct_output = WEXITSTATUS(sts);
+	}
+
+	return (ct_output);
 }

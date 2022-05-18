@@ -1,51 +1,39 @@
 #include "main.h"
 
 /**
- *builtin_parser - parses builtin programs
- *@tokens:split tokens from stdin
- *Return:0 - success,1 otherwise
+ * built_in - commands.
+ *
+ * @Arg_str: argument string
+ * @ct_output: output.
+ * @row: row arguments.
+ *
+ * Return: -1,0
+ *
  */
-int builtin_parser(char **tokens)
+
+int built_in(char **Arg_str, int ct_output, char *row)
 {
-/*cd handling*/
-	if (_strcmp(*tokens, "cd") == 0)
+	char *built_box[2] = {"exit", "env"};
+	int i = 0, size_env;
+	char *env = NULL;
+
+	if (_strcmp(built_box[0], Arg_str[0]) == 0)
 	{
-		return (_cd(tokens));
+		free(Arg_str);
+		free(row);
+		exit(ct_output);
 	}
-/*user invokes env*/
-	else if (_strcmp(*tokens, "env") == 0)
+
+	else if (_strcmp(built_box[1], Arg_str[0]) == 0)
 	{
-		return (shell_environ());
-	}
-/*user invokes setenv*/
-	else if (_strcmp(*tokens, "setenv") == 0)
-	{
-/*check if user inputs it in the form: setenv var_name var_value*/
-		if (tokens[1] && tokens[2])
+		for (i = 0; environ[i] ; i++)
 		{
-			_setenv(tokens[1], tokens[2]);
-			return (0);
+			env = environ[i];
+			size_env = _strlen(env);
+			write(STDOUT, env, size_env);
+			write(STDOUT, "\n", 1);
 		}
-/*else print a ERR message*/
-		printf("Usage: setenv var_name var_value\n");
-		return (0);
 	}
-	else if (_strcmp(*tokens, "unsetenv") == 0)
-	{
-/*check for var_name to change*/
-		if (tokens[1])
-		{
-			_unsetenv(tokens[1]);
-			return (0);
-		}
-/*else an error msg*/
-		printf("Usage: unsetenv VAR_NAME\n");
-		return (0);
-	}
-	else if (strcmp(*tokens, "history") == 0)
-	{
-		return (display_history());
-	}
-/*return 1 if no instance was handled*/
-	return (1);
+
+	return (0);
 }

@@ -1,34 +1,33 @@
-#ifndef _HOLBERTON_H_
-#define _HOLBERTON_H_
-#include <sys/wait.h>
-#include <sys/types.h>
+#ifndef _MAIN_H_
+#define _MAIN_H_
+#include <signal.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <unistd.h>
-#include <dirent.h>
-#include <limits.h>
-#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#define DELIM " ,!¡¿?\'\"\n\t"
+#define STDOUT STDOUT_FILENO
+#define STDIN STDIN_FILENO
+#define STDERR STDERR_FILENO
 
 extern char **environ;
+char **tokenizer(char *BUFF);
+char *check_path(char **Arg_str);
+void _error(char *CMD);
+int built_in(char **Arg_str, int ct_output, char *row);
+int Run(char **Arg_str, int ct_output, char *row);
+int _fork(char **Arg_str, int ct_output);
+int comp_Arg(char **Arg_str, int ct_output);
+void _signal(int sig);
+char *rd_row(void);
+char *get_env(void);
+int _strncmp(char *string_1, char *string_2, int len);
+char *_strcpy(char *dest, char *src);
+char *_strcat(char *dest, char *src);
+int _strcmp(char *string_1, char *string_2);
+int _strlen(char *a);
 
-char *show_input(void);
-void prompt(void);
-char *_strcat(char *src);
-int _strlen(char *str);
-void place(char *str);
-char *findfile(char *command);
-char *find_command(char *command);
-int compare(char *s1, char *s2);
-int _strcmpdir(char *s1, char *s2);
-int charput(char c);
-void place(char *str);
-char *str_concat(char *s1, char *s2);
-int lookforslash(char *cmd);
-int compareExit(char *s1, char *s2);
-int compareEnv(char *s1, char *s2);
-void execute_proc(char **cmd);
-char **identify_string(char *parameter);
-void controlC(int sig);
 #endif

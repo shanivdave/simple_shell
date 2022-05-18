@@ -1,47 +1,45 @@
 #include "main.h"
 
 /**
- * prompt - call prompt from another function (prompt)
+ * comp_Arg - Check command in path
  *
- **/
-void prompt(void)
-{
-	for (;;)
-	{
-		char *text = NULL, **environ;
-		pid_t child_pid;
-		int status, lenbuf;
-		size_t bufsize = 0;
+ * @Arg_str: argument string.
+ * @ct_output: output.
+ *
+ * Return: output;
+ */
 
-		place("$ ");
-		lenbuf = getline(&text, &bufsize, stdin);
-		if (lenbuf == -1)
-			exit(98);
-		if (compareExit(text, "exit") == 0)
-			exit(0);
-		if (compareEnv(text, "env") == 0)
-		{
-			while (*environ != NULL)
-			{
-				if (!(_strcmpdir(*environ, "USER")) ||
-						!(_strcmpdir(*environ, "LANGUAGE")) ||
-						!(_strcmpdir(*environ, "SESSION")) ||
-						!(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
-						!(_strcmpdir(*environ, "SHLV")) ||
-						!(_strcmpdir(*environ, "HOME")) ||
-						!(_strcmpdir(*environ, "C_IS")) ||
-						!(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
-						!(_strcmpdir(*environ, "LOGNAME")) ||
-						!(_strcmpdir(*environ, "TERM")) ||
-						!(_strcmpdir(*environ, "PATH")))
-				{
-					place(*environ), place("\n"); }
-				environ++; }}
-		child_pid = fork();
-		if (child_pid < 0)
-			perror("Error");
-		if (child_pid == 0)
-			identify_string(text);
-		else
-			wait(&status);
-	}}
+int comp_Arg(char **Arg_str, int ct_output)
+{
+	int cal_path = 0;
+	struct stat st;
+	char *copy_Arg = NULL;
+
+	copy_Arg = malloc(sizeof(char *) * _strlen(Arg_str[0]));
+	copy_Arg = _strcpy(copy_Arg, Arg_str[0]);
+
+	if (stat(Arg_str[0], &st) == 0 && copy_Arg[0] != '/')
+		Arg_str[0] = check_path(Arg_str);
+
+	else if (stat(Arg_str[0], &st) == -1)
+		Arg_str[0] = check_path(Arg_str);
+
+	if (_strcmp(copy_Arg, Arg_str[0]) != 0)
+		cal_path = 1;
+
+	if (stat(Arg_str[0], &st) == 0)
+		ct_output = _fork(Arg_str, ct_output);
+
+	else
+	{
+		_error(Arg_str[0]);
+		ct_output = 127;
+	}
+
+	if (cal_path == 1)
+		free(Arg_str[0]);
+
+	free(copy_Arg);
+
+	return (ct_output);
+}

@@ -1,47 +1,28 @@
 #include "main.h"
-#include "holberton.h"
 
 /**
- * find_command - finds command to execute in path routes.
+ * rd_row - Read the line.
  *
- * @command: first position of getline input.
- *
- * Return: string of folder for command to be executed.
- **/
-char *find_command(char *command)
-{
-	DIR *folder;
-	struct dirent *entry;
-	char *cmd, comp, **str  = malloc(sizeof(char) * 1024);
-	char **split = malloc(sizeof(char) * 1024);
-	int i;
+ * Return: arguments.
+ */
 
-	while (*environ != NULL)
+char *rd_row(void)
+{
+	char *BUFF = NULL;
+	size_t BUFF_SIZE = 0;
+	int line = 0;
+
+	line = getline(&BUFF, &BUFF_SIZE, stdin);
+
+	if (line == EOF)
 	{
-		if (!(_strcmpdir(*environ, "PATH")))
-		{
-			*str = *environ;
-			for (i = 0; i < 9; i++, split++, str++)
-			{
-				*split = strtok(*str, ":='PATH'");
-				folder = opendir(*split);
-				if (folder == NULL)
-				{
-					perror("Unable to read directory");
-				}
-				while ((entry = readdir(folder)))
-				{
-					cmd = entry->d_name;
-					comp = _strcmpdir(cmd, command);
-					if (comp == 0)
-					{
-						return (*split);
-					}
-					if (cmd == NULL)
-					{
-						perror("Error");
-					}}}}
-		environ++;
+		free(BUFF);
+
+		if (isatty(STDIN) != 0)
+			write(STDOUT, "\n", 1);
+
+		exit(EXIT_SUCCESS);
 	}
-	return ("Error: Not Found");
+
+	return (BUFF);
 }
