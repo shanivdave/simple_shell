@@ -1,10 +1,4 @@
-/*
- * File: input_helpers.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 char *get_args(char *line, int *exe_ret);
 int call_args(char **args, char **front, int *exe_ret);
