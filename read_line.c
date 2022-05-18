@@ -1,33 +1,37 @@
 #include "main.h"
 
 /**
- * tokenizer - Analyze arguments in tokens.
+ * _fork - Create a child process
  *
- * @BUFF: bring arguments.
+ * @Arg_str: argument string
+ * @ct_output: output.
  *
- * Return: Arg_str.
+ * Return: output.
  */
 
-char **tokenizer(char *BUFF)
+int _fork(char **Arg_str, int ct_output)
 {
-	char *token = NULL;
-	char **Arg_str = NULL;
-	int i = 0, size = 0;
+	pid_t pid;
+	int sts;
 
-	while (BUFF[size] != '\0')
-		size++;
+	pid = fork();
 
-	Arg_str = malloc(sizeof(char *) * size);
-
-
-	token = strtok(BUFF, DELIM);
-	Arg_str[i] = token;
-
-	for (i = 1; token != NULL; i++)
+	if (pid == 0)
 	{
-		token = strtok(NULL, DELIM);
-		Arg_str[i] = token;
+		if (execve(Arg_str[0], Arg_str, NULL) == -1)
+			perror("Error: execve");
 	}
 
-	return (Arg_str);
+	else if (pid == -1)
+		perror("Error: Fork failure");
+
+	else
+	{
+		wait(&sts);
+
+		if (WIFEXITED(sts))
+			ct_output = WEXITSTATUS(sts);
+	}
+
+	return (ct_output);
 }
