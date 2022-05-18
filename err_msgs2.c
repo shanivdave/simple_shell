@@ -1,10 +1,4 @@
-/*
- * File: err_msgs2.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 char *error_126(char **args);
 char *error_127(char **args);
