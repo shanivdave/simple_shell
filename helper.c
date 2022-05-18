@@ -1,10 +1,4 @@
-/*
- * File: helper.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 void free_args(char **args, char **front);
 char *get_pid(void);
