@@ -1,28 +1,37 @@
 #include "main.h"
 
 /**
- * _putchar - writes the character c to stdout
- * @c: The character to print
+ * _fork - Create a child process
  *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
+ * @Arg_str: argument string
+ * @ct_output: output.
+ *
+ * Return: output.
  */
-int _putchar(char c)
-{
-return (write(1, &c, 1));
-}
 
-/**
- * _print - prints a string
- * @str: pointer to the string to print
- * Return: void
- */
-void _print(char *str)
+int _fork(char **Arg_str, int ct_output)
 {
-int i = 0;
-while (str[i])
-{
-_putchar(str[i]);
-i++;
-}
+	pid_t pid;
+	int sts;
+
+	pid = fork();
+
+	if (pid == 0)
+	{
+		if (execve(Arg_str[0], Arg_str, NULL) == -1)
+			perror("Error: execve");
+	}
+
+	else if (pid == -1)
+		perror("Error: Fork failure");
+
+	else
+	{
+		wait(&sts);
+
+		if (WIFEXITED(sts))
+			ct_output = WEXITSTATUS(sts);
+	}
+
+	return (ct_output);
 }
