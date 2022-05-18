@@ -1,10 +1,4 @@
-/*
- * File: errors.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 int num_len(int num);
 char *_itoa(int num);
