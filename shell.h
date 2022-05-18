@@ -29,7 +29,7 @@ typedef struct variables
 	size_t count;
 	char **argv;
 	int status;
-	char **commands;
+	
 } vars_t;
 
 /**
