@@ -1,10 +1,4 @@
-/*
- * File: err_msgs1.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 char *error_env(char **args);
 char *error_1(char **args);
