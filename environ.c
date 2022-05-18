@@ -1,10 +1,4 @@
-/*
- * File: environ.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
+#include "main.h"
 
 char **_copyenv(void);
 void free_env(void);
