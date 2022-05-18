@@ -1,49 +1,51 @@
 #include "main.h"
 
 /**
- * execute_proc - similar to puts in C
- * @cmd: a pointer the integer we want to set to 402
+ * check_path - Check_path.
  *
- * Return: int
+ * @Arg_str: argument string.
+ *
+ * Return: CP_arg
+ *
  */
-void execute_proc(char **cmd)
+
+char *check_path(char **Arg_str)
 {
+	char *CP_PATH = NULL, *path = NULL;
+	char *env = NULL, *CP_Arg = NULL, *len_env = NULL;
+	size_t size_CP_Arg, size;
+	struct stat st;
 
-	char *parametro = (*(cmd + 1));
-	char *s, *slash = "/";
-	char *o;
+	env = get_env();
 
-	char *vartoprint = *cmd;
-	char *argv[4];
-
-	if ((access(cmd[0], F_OK) == 0))
+	if (env != NULL)
 	{
-		argv[0] = cmd[0];
-		argv[1] = parametro;
-		argv[2] = ".";
-		argv[3] = NULL;
+		CP_Arg = Arg_str[0];
 
-		if (execve(argv[0], argv, NULL) == -1)
+		size_CP_Arg = _strlen(CP_Arg);
+		len_env = malloc(sizeof(char) * _strlen(env) + 1);
+		len_env = _strcpy(len_env, env);
+		path = strtok(len_env, ":");
+
+		while (path != NULL)
 		{
-			perror("Error");
+			size = _strlen(path) + size_CP_Arg + 2;
+			CP_PATH = malloc(sizeof(char) * size);
+
+			CP_PATH = _strcpy(CP_PATH, path);
+			CP_PATH = _strcat(CP_PATH, "/");
+			CP_PATH = _strcat(CP_PATH, CP_Arg);
+
+			if (stat(CP_PATH, &st) == 0 && st.st_mode & X_OK)
+			{
+				free(len_env);
+				return (CP_PATH);
+			}
+
+			path = strtok(NULL, ":");
+			free(CP_PATH);
 		}
+		free(len_env);
 	}
-	else
-	{
-		o = find_command(vartoprint);
-
-		slash = str_concat(o, slash);
-
-		s = str_concat(slash, *cmd);
-
-		argv[0] = s;
-		argv[1] = parametro;
-		argv[2] = ".";
-		argv[3] = NULL;
-
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-			perror("Error");
-		}
-	}
+	return (CP_Arg);
 }
